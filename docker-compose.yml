@@ -1,0 +1,89 @@
+version: "3.7"
+
+services:
+  celery_habits:
+    restart: always
+    build:
+      context: .
+    container_name: celery_habits
+    env_file:
+      - .env.docker
+    command: >
+      bash -c "celery -A config worker --beat --loglevel=info"
+    volumes:
+      - .:/app
+    links:
+      - redis_habits
+    depends_on:
+      - backend_habits
+      - redis_habits
+
+  backend_habits:
+    build: .
+    container_name: backend_habits
+    env_file:
+      - .env.docker
+    depends_on:
+      db_habits:
+        condition: service_healthy
+    command: >
+      bash -c "python manage.py collectstatic --no-input
+      && python manage.py makemigrations
+      && python manage.py migrate
+      && python manage.py fill
+      && gunicorn config.wsgi:application --bind 0.0.0.0:8000"
+
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./static:/app/static
+
+
+  db_habits:
+    restart: always
+    image: postgres
+    container_name: db_habits
+    env_file:
+      - .env.docker
+    ports:
+      - "5434:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - p_data:/var/lib/postgresql/data
+      - ./postgresql.conf:/etc/postgresql/postgresql.conf
+
+
+  redis_habits:
+    image: redis:7.0.2-alpine
+    container_name: redis_habits
+    expose:
+      - "6379"
+    ports:
+      - "9998:8001"
+      - "6380:6379"
+
+    volumes:
+      - ./redis-data:/var/lib/redis
+
+  nginx_habits:
+    build: ./nginx
+    container_name: nginx_habits
+    depends_on:
+      - backend_habits
+    ports:
+      - "8080:80"
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+      - ./static:/static
+
+
+volumes:
+  static:
+  p_data:
+  db_habits:
+    driver: local
+  redis-data:
