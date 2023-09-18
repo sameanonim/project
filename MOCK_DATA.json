@@ -1,0 +1,46 @@
+[{
+    "model": "Mrs",
+    "pk": 1,
+    "fields": {
+      "action_time": "2023-08-01T15:50:27.719Z",
+      "user": 1,
+      "content_type": 404928033,
+      "object_id": "1",
+      "object_repr": "gumar.omariev@yandex.ru - Гумар Омариев: None",
+      "action_flag": 2,
+      "change_message": "[{\"added\": {}}]"
+    }
+  }
+{
+    "model": "django_celery_beat.crontabschedule",
+    "pk": 2,
+    "fields": {
+      "minute": "30",
+      "hour": "6",
+      "day_of_week": "*",
+      "day_of_month": "*",
+      "month_of_year": "*",
+      "timezone": "Europe/Moscow"
+    }
+  }
+{
+    "model": "users.user",
+    "pk": 3,
+    "fields": {
+      "password": "pbkdf2_sha256$600000$cKW84XhgtTrX6rjd3G874r$p10dtyy2fW6HPtXXa2yAIWGy1tLR6o0NCiRBin6JSJ8=",
+      "last_login": null,
+      "is_superuser": false,
+      "first_name": "",
+      "last_name": "",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2023-08-01T16:00:27.315Z",
+      "email": "continuation@mail.ru",
+      "avatar": "",
+      "chat_id": "856040825",
+      "login_tg": "Продолжение Продолжениев",
+      "groups": [],
+      "user_permissions": []
+    }
+  }  
+]
